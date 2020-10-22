@@ -1,8 +1,7 @@
-﻿using ExcelDataReader;
+﻿using System.Collections.Generic;
 using System;
-using System.Data;
-using System.IO;
 using System.Windows.Forms;
+using ExcelApp = Microsoft.Office.Interop.Excel;
 
 namespace Excel_Data_Mkaer
 {
@@ -13,29 +12,40 @@ namespace Excel_Data_Mkaer
             InitializeComponent();
         }
 
-        private DataTableCollection dataTableCollection;
-
-        private void chooseDocxBtn_Click(object sender,EventArgs e)
+        private void classicBtn_Click(object sender,EventArgs e)
         {
-            using(var openIFileDialog = new OpenFileDialog() { Filter = "format 1|*.xls|format 2|*.xlsx" })
+            using(var openFiledialog = new OpenFileDialog() { Filter = "form 1|*.xls" })
             {
-                if(openIFileDialog.ShowDialog() == DialogResult.OK)
+                if(openFiledialog.ShowDialog() == DialogResult.OK)
                 {
-                    filePathTxt.Text = openIFileDialog.FileName;
+                    var fName = openFiledialog.SafeFileName;
+                    fName = fName.Substring(fName.LastIndexOf('.') + 1,fName.Length - fName.LastIndexOf('.') - 1);
 
-                    using(var stream = File.Open(openIFileDialog.FileName,FileMode.Open,FileAccess.Read))
+                    if(fName.Equals("xls",StringComparison.InvariantCulture))
                     {
-                        using(IExcelDataReader reader = ExcelReaderFactory.CreateReader(stream))
+                        filePathTxt.Text = openFiledialog.FileName;
+                        var exlApp = new ExcelApp.Application();
+                        var exlWorkBook = exlApp.Workbooks.Open(openFiledialog.FileName);
+                        var workSheet = exlWorkBook.Worksheets[1];
+                        var range = workSheet.UsedRange();
+
+                        var valuList = new List<string>();
+
+                        int rowCount = range.Rows.Count;
+                        int colCount = range.Columns.Count;
+
+                        for(var i = 1;i <= rowCount;i++)
                         {
-                            DataSet result = reader.AsDataSet(configuration: new ExcelDataSetConfiguration()
+                            for(var j = 1;j <= colCount;j++)
                             {
-                                ConfigureDataTable = (_) => new ExcelDataTableConfiguration { UseHeaderRow = true }
-                            });
-                            dataTableCollection = result.Tables;
-                            DataTable dt = dataTableCollection[0];
-                            dataGridDocx.DataSource = dt;
+                                Object value = range.Cells[j][i].Value;
+                                valuList.Add(value.ToString());
+                            }
                         }
+                        dataGridDocx.DataSource = valuList;
                     }
+                    else
+                        MessageBox.Show("File extention must be ( xls )","Error");
                 }
             }
         }

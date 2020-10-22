@@ -28,21 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.chooseDocxBtn = new System.Windows.Forms.Button();
             this.filePathTxt = new System.Windows.Forms.TextBox();
             this.dataGridDocx = new System.Windows.Forms.DataGridView();
+            this.classicBtn = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridDocx)).BeginInit();
             this.SuspendLayout();
-            // 
-            // chooseDocxBtn
-            // 
-            this.chooseDocxBtn.Location = new System.Drawing.Point(499, 69);
-            this.chooseDocxBtn.Name = "chooseDocxBtn";
-            this.chooseDocxBtn.Size = new System.Drawing.Size(75, 23);
-            this.chooseDocxBtn.TabIndex = 0;
-            this.chooseDocxBtn.Text = "...";
-            this.chooseDocxBtn.UseVisualStyleBackColor = true;
-            this.chooseDocxBtn.Click += new System.EventHandler(this.chooseDocxBtn_Click);
             // 
             // filePathTxt
             // 
@@ -59,14 +49,24 @@
             this.dataGridDocx.Size = new System.Drawing.Size(633, 291);
             this.dataGridDocx.TabIndex = 2;
             // 
+            // classicBtn
+            // 
+            this.classicBtn.Location = new System.Drawing.Point(499, 66);
+            this.classicBtn.Name = "classicBtn";
+            this.classicBtn.Size = new System.Drawing.Size(103, 23);
+            this.classicBtn.TabIndex = 3;
+            this.classicBtn.Text = "Load document";
+            this.classicBtn.UseVisualStyleBackColor = true;
+            this.classicBtn.Click += new System.EventHandler(this.classicBtn_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(675, 450);
+            this.Controls.Add(this.classicBtn);
             this.Controls.Add(this.dataGridDocx);
             this.Controls.Add(this.filePathTxt);
-            this.Controls.Add(this.chooseDocxBtn);
             this.Name = "Form1";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridDocx)).EndInit();
@@ -76,10 +76,9 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.Button chooseDocxBtn;
         private System.Windows.Forms.TextBox filePathTxt;
         private System.Windows.Forms.DataGridView dataGridDocx;
+        private System.Windows.Forms.Button classicBtn;
     }
 }
 
