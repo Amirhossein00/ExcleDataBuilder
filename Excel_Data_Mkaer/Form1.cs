@@ -1,16 +1,21 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 using System.Windows.Forms;
-using ExcelApp = Microsoft.Office.Interop.Excel;
+using Excel_Data_Mkaer.Factory;
+using Excel_Data_Mkaer.Validations;
 
 namespace Excel_Data_Mkaer
 {
     public partial class Form1:Form
     {
-        public Form1()
+        private readonly IExcelFactory _excelFactory;
+        
+        public Form1(IExcelFactory excelFactory)
         {
+            this._excelFactory = excelFactory;
+
             InitializeComponent();
         }
+
 
         private void classicBtn_Click(object sender,EventArgs e)
         {
@@ -19,34 +24,45 @@ namespace Excel_Data_Mkaer
                 if(openFiledialog.ShowDialog() == DialogResult.OK)
                 {
                     var fName = openFiledialog.SafeFileName;
-                    fName = fName.Substring(fName.LastIndexOf('.') + 1,fName.Length - fName.LastIndexOf('.') - 1);
 
-                    if(fName.Equals("xls",StringComparison.InvariantCulture))
+                    if(fName.CheckFileExtention())
                     {
                         filePathTxt.Text = openFiledialog.FileName;
-                        var exlApp = new ExcelApp.Application();
-                        var exlWorkBook = exlApp.Workbooks.Open(openFiledialog.FileName);
-                        var workSheet = exlWorkBook.Worksheets[1];
-                        var range = workSheet.UsedRange();
-
-                        var valuList = new List<string>();
-
-                        int rowCount = range.Rows.Count;
-                        int colCount = range.Columns.Count;
-
-                        for(var i = 1;i <= rowCount;i++)
-                        {
-                            for(var j = 1;j <= colCount;j++)
-                            {
-                                Object value = range.Cells[j][i].Value;
-                                valuList.Add(value.ToString());
-                            }
-                        }
-                        dataGridDocx.DataSource = valuList;
                     }
                     else
-                        MessageBox.Show("File extention must be ( xls )","Error");
+                        MessageBox.Show("The only valid file extention is ( xls )","Error");
                 }
+            }
+        }
+
+        private void removeFileNameBtn_Click(object sender,EventArgs e)
+        {
+            filePathTxt.Text = string.Empty;
+        }
+
+        private void saleInvoiceBtn_Click(object sender,EventArgs e)
+        {
+            if(string.IsNullOrEmpty(filePathTxt.Text))
+            {
+                MessageBox.Show("Choose file");
+                return;
+            }
+
+
+        }
+
+        private void ReceiptBtn_Click(object sender,EventArgs e)
+        {
+            if(string.IsNullOrWhiteSpace(filePathTxt.Text))
+            {
+                MessageBox.Show("Choose file");
+                return;
+            }
+
+            var serviceResult = _excelFactory.GenerateReceipt(filePathTxt.Text);
+            if(serviceResult.IsCompleted)
+            {
+                var records = serviceResult.Result;
             }
         }
     }
