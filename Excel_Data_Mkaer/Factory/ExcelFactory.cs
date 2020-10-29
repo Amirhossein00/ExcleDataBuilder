@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Excel_Data_Mkaer.Models;
+//do not remove below namespace reference
 using Excel_Data_Mkaer.Utilities;
 using ExcelApplication = Microsoft.Office.Interop.Excel;
 
@@ -23,22 +24,26 @@ namespace Excel_Data_Mkaer.Factory
             var id = 1;
             for(var row = 2;row <= usedrange.Rows.Count;row++)
             {
+
+                object conditionvalue = usedrange.Cells[9][row].Value;
+
+                if(conditionvalue == null)
+                    continue;
+
+                long.TryParse(conditionvalue.ToString(),out var numericConditionValue);
+
+                if(numericConditionValue == 0)
+                    continue;
                 try
                 {
-
-                    object conditionvalue = usedrange.Cells[8][row].Value;
-                    long.TryParse(conditionvalue.ToString(),out var numericConditionValue);
-
-                    if(numericConditionValue == 0)
-                        break;
-
+                    var date = (string)usedrange.Cells[2][row].Value.ToString();
                     var currentRowValues = new ReceiptTemplate()
                     {
                         Id = id,
-                        ReceiptDescription = $"car:{ usedrange.Cells[3][row].Value}, service date type:{usedrange.Cells[11][row].Value}, additional description:{usedrange.Cells[12][row]}",
-                        CashAmount = Convert.ToInt64(usedrange.Cells[8][row].Value),
+                        ReceiptDescription = $"car:{ usedrange.Cells[3][row].Value}, service date type:{usedrange.Cells[11][row].Value}, additional description:{usedrange.Cells[12][row].Value}",
+                        CashAmount = numericConditionValue,
                         CustomerId = 1,
-                        ReceiptDate = usedrange.Cells[2][row].Value.ToString().ConvertGeorgianDateToPersianDate(),
+                        ReceiptDate = date.ConvertGeorgianDateToPersianDate(),
                         ReceiptDateType = true
                     };
                     result.Add(currentRowValues);

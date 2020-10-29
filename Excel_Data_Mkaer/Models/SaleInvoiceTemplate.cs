@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace Excel_Data_Mkaer.Models
+﻿namespace Excel_Data_Mkaer.Models
 {
     public partial class SaleInvoiceTemplate
     {
         public int Id { get; set; }
 
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         public int? CustomerId { get; set; }
 

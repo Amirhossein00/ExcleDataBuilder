@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Excel_Data_Mkaer.Models
+﻿namespace Excel_Data_Mkaer.Models
 {
     public partial class ReceiptTemplate
     {
@@ -10,7 +8,7 @@ namespace Excel_Data_Mkaer.Models
 
         public int CustomerId { get; set; }
 
-        public DateTime ReceiptDate { get; set; }
+        public string ReceiptDate { get; set; }
 
         public long CashAmount { get; set; }
 

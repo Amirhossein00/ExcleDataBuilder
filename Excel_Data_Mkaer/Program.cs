@@ -1,31 +1,26 @@
-﻿using System;
-using System.Windows.Forms;
+﻿using Autofac;
 using Excel_Data_Mkaer.Factory;
-using SimpleInjector;
+using System;
+using System.Windows.Forms;
 
 namespace Excel_Data_Mkaer
 {
     static class Program
     {
-        private static Container container;
+        public static IContainer container;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main()
         {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<ExcelFactory>().As<IExcelFactory>();
+            container = builder.Build();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Bootstrap();
-            Application.Run(container.GetInstance<Form1>());
-        }
-        private static void Bootstrap()
-        {
-            var container = new Container();
-
-            container.Register<IExcelFactory,ExcelFactory>(Lifestyle.Singleton);
-            container.Register<Form1>();
-            container.Verify();
+            Application.Run(new Form1());
         }
     }
 }

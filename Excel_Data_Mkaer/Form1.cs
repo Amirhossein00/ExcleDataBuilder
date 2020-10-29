@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Autofac;
 using Excel_Data_Mkaer.Factory;
 using Excel_Data_Mkaer.Validations;
 
@@ -7,11 +8,8 @@ namespace Excel_Data_Mkaer
 {
     public partial class Form1:Form
     {
-        private readonly IExcelFactory _excelFactory;
-        
-        public Form1(IExcelFactory excelFactory)
+        public Form1()
         {
-            this._excelFactory = excelFactory;
 
             InitializeComponent();
         }
@@ -58,11 +56,14 @@ namespace Excel_Data_Mkaer
                 MessageBox.Show("Choose file");
                 return;
             }
-
-            var serviceResult = _excelFactory.GenerateReceipt(filePathTxt.Text);
-            if(serviceResult.IsCompleted)
+            using (var scope = Program.container.BeginLifetimeScope())
             {
-                var records = serviceResult.Result;
+                var _excelFactory = scope.Resolve<IExcelFactory>();
+                var serviceResult = _excelFactory.GenerateReceipt(filePathTxt.Text);
+                if(!serviceResult.IsFaulted)
+                {
+                    var records = serviceResult.Result;
+                }
             }
         }
     }
